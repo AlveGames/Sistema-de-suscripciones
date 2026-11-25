@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% block titulo %}Categorías{% endblock %}
+{% block encabezado %}Categorías{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'categorias:crear' %}">+ Nueva categoría</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <form class="buscador" method="get">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por nombre">
+    <button class="boton secundario" type="submit">Buscar</button>
+  </form>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        {# CAMBIAR: columnas de tu tabla #}
+        <tr><th>ID</th><th>Nombre</th><th class="numero">Servicios</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+          <tr>
+            {# CAMBIAR: un <td> por cada columna #}
+            <td>{{ r.pk }}</td>
+            <td>{{ r.nombre }}</td>
+            <td class="numero">{{ r.servicios.count }}</td>
+            <td class="numero">
+              <a class="boton secundario chico" href="{% url 'categorias:editar' r.pk %}">Editar</a>
+              <a class="boton peligro chico" href="{% url 'categorias:eliminar' r.pk %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="vacio">No hay registros.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "core/paginacion.html" %}
+</div>
+{% endblock %}

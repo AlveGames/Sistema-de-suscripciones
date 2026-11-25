@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block encabezado %}Resumen de la plataforma{% endblock %}
+
+{% block contenido %}
+<div class="indicadores">
+  <div class="indicador"><span>Clientes activos</span><strong>{{ clientes_activos }}</strong></div>
+  <div class="indicador"><span>Suscripciones activas</span><strong>{{ suscripciones_activas }}</strong></div>
+  <div class="indicador"><span>Servicios activos</span><strong>{{ servicios_activos }}</strong></div>
+  <div class="indicador"><span>Ingresos de este mes</span><strong>$ {{ ingresos_mes|floatformat:2 }}</strong></div>
+</div>
+
+<div class="tarjeta">
+  <h2>Últimas operaciones</h2>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Cliente</th><th>Operación</th><th>Servicio</th><th>Plan</th><th class="numero">Precio</th></tr>
+      </thead>
+      <tbody>
+        {% for o in ultimas_operaciones %}
+          <tr>
+            <td>{{ o.fecha_operacion|date:"d/m/Y" }}</td>
+            <td>{{ o.suscripcion.cliente.nombre }}</td>
+            <td><span class="etiqueta">{{ o.tipo_operacion.nombre_operacion }}</span></td>
+            <td>{{ o.modalidad_nueva.servicio.nombre }}</td>
+            <td>{{ o.modalidad_nueva.nombre_plan }}</td>
+            <td class="numero">{% if o.precio_aplicado %}$ {{ o.precio_aplicado }}{% else %}—{% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="vacio">Todavía no hay operaciones.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

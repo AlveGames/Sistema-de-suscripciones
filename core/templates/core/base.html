@@ -1,0 +1,54 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Inicio{% endblock %} · Plataforma de Suscripciones</title>
+  <link rel="stylesheet" href="{% static 'core/estilos.css' %}">
+</head>
+<body>
+{% with ns=request.resolver_match.namespace un=request.resolver_match.url_name %}
+<aside class="menu">
+  <a class="marca" href="{% url 'core:inicio' %}">
+    <span class="marca-icono">PS</span>
+    <span>Plataforma<small>Servicios por suscripción</small></span>
+  </a>
+  <nav>
+    <a href="{% url 'core:inicio' %}" class="{% if ns == 'core' %}activo{% endif %}">Inicio</a>
+
+    <p class="grupo">Operación</p>
+    <a href="{% url 'suscripciones:index' %}" class="{% if ns == 'suscripciones' %}activo{% endif %}">Suscripciones</a>
+    <a href="{% url 'clientes:index' %}" class="{% if ns == 'clientes' and 'pago' not in un %}activo{% endif %}">Clientes</a>
+    <a href="{% url 'clientes:pagos' %}" class="{% if ns == 'clientes' and 'pago' in un %}activo{% endif %}">Pagos</a>
+
+    <p class="grupo">Catálogo de servicios</p>
+    <a href="{% url 'categorias:index' %}" class="{% if ns == 'categorias' %}activo{% endif %}">Categorías</a>
+    <a href="{% url 'servicios:index' %}" class="{% if ns == 'servicios' and 'modalidad' not in un %}activo{% endif %}">Servicios</a>
+    <a href="{% url 'servicios:modalidades' %}" class="{% if ns == 'servicios' and 'modalidad' in un %}activo{% endif %}">Modalidades</a>
+
+    <p class="grupo">Configuración</p>
+    <a href="{% url 'catalogos:index' %}" class="{% if ns == 'catalogos' %}activo{% endif %}">Catálogos</a>
+    <a href="{% url 'uso:index' %}" class="{% if ns == 'uso' %}activo{% endif %}">Registro de uso</a>
+
+    <p class="grupo">Análisis</p>
+    <a href="{% url 'consultas:index' %}" class="{% if ns == 'consultas' %}activo{% endif %}">Consultas</a>
+  </nav>
+</aside>
+{% endwith %}
+
+<main class="contenido">
+  <header class="cabecera">
+    <h1>{% block encabezado %}{% endblock %}</h1>
+    <div class="acciones">{% block acciones %}{% endblock %}</div>
+  </header>
+
+  {% if messages %}
+    <div class="mensajes">
+      {% for m in messages %}<div class="mensaje {{ m.tags }}">{{ m }}</div>{% endfor %}
+    </div>
+  {% endif %}
+
+  {% block contenido %}{% endblock %}
+</main>
+</body>
+</html>

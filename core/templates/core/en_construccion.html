@@ -1,0 +1,10 @@
+{% extends "core/base.html" %}
+{% block titulo %}{{ modulo }}{% endblock %}
+{% block encabezado %}{{ modulo }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <p><span class="etiqueta amarilla">En construcción</span></p>
+  <p>Este módulo lo está haciendo <strong>{{ responsable }}</strong>.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% if page_obj.has_other_pages %}
+<div class="paginacion">
+  {% if page_obj.has_previous %}
+    <a class="boton secundario chico" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}">Anterior</a>
+  {% endif %}
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a class="boton secundario chico" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}">Siguiente</a>
+  {% endif %}
+</div>
+{% endif %}
