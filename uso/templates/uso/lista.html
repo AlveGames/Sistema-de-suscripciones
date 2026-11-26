@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% block titulo %}Registro de uso{% endblock %}
+{% block encabezado %}Registro de uso{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'uso:crear' %}">+ Nuevo registro de uso</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <form class="buscador" method="get">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por cliente, plan o métrica">
+    <button class="boton secundario" type="submit">Buscar</button>
+  </form>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Suscripción</th>
+          <th>Tipo de métrica</th>
+          <th>Fecha de uso</th>
+          <th class="numero">Valor</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+          <tr>
+            <td>{{ r.pk }}</td>
+            <td>{{ r.suscripcion }}</td>
+            <td>{{ r.tipo_metrica }}</td>
+            <td>{{ r.fecha_uso|date:"Y-m-d" }}</td>
+            <td class="numero">{{ r.valor }}</td>
+            <td class="numero">
+              <a class="boton secundario chico" href="{% url 'uso:editar' r.pk %}">Editar</a>
+              <a class="boton peligro chico" href="{% url 'uso:eliminar' r.pk %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="vacio">No hay registros.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "core/paginacion.html" %}
+</div>
+{% endblock %}
