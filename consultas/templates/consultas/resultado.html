@@ -1,0 +1,82 @@
+{% extends "core/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block encabezado %}{{ titulo }}{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'consultas:index' %}">← Volver a consultas</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <p style="margin-top: 0;"><span class="etiqueta verde">Consulta {{ numero }}</span></p>
+  <h2>{{ pregunta }}</h2>
+
+  {# Filtros: cada consulta manda solo la lista que necesita #}
+  {% if clientes %}
+    <form class="buscador" method="get">
+      <select name="cliente" onchange="this.form.submit()" style="padding: 8px 11px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; background: #fff; min-width: 320px;">
+        <option value="">— Elegir cliente —</option>
+        {% for c in clientes %}
+          <option value="{{ c.pk }}" {% if c.pk == cliente_elegido %}selected{% endif %}>{{ c.nombre }} ({{ c.documento }})</option>
+        {% endfor %}
+      </select>
+      <button class="boton" type="submit">Ver historial</button>
+    </form>
+  {% endif %}
+
+  {% if anios %}
+    <form class="buscador" method="get">
+      <select name="anio" onchange="this.form.submit()" style="padding: 8px 11px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; background: #fff; min-width: 320px;">
+        <option value="">Todos los años</option>
+        {% for a in anios %}
+          <option value="{{ a }}" {% if a == anio_elegido %}selected{% endif %}>{{ a }}</option>
+        {% endfor %}
+      </select>
+      <button class="boton" type="submit">Filtrar</button>
+    </form>
+  {% endif %}
+
+  {% if servicios %}
+    <form class="buscador" method="get">
+      <select name="servicio" onchange="this.form.submit()" style="padding: 8px 11px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; background: #fff; min-width: 320px;">
+        <option value="">Todos los servicios</option>
+        {% for s in servicios %}
+          <option value="{{ s.pk }}" {% if s.pk == servicio_elegido %}selected{% endif %}>{{ s.nombre }}</option>
+        {% endfor %}
+      </select>
+      <button class="boton" type="submit">Filtrar</button>
+    </form>
+  {% endif %}
+
+  {# Tabla del resultado: encabezados desde "encabezados", datos desde "filas" #}
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          {% for nombre, es_numero in encabezados %}
+            <th{% if es_numero %} class="numero"{% endif %}>{{ nombre }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+          <tr>
+            {% for texto, es_numero in fila %}
+              <td{% if es_numero %} class="numero"{% endif %}>{{ texto }}</td>
+            {% endfor %}
+          </tr>
+        {% empty %}
+          <tr><td colspan="{{ encabezados|length|default:1 }}" class="vacio">
+            {% if esperando_filtro %}Elige un cliente para ver su historial.{% else %}No hay resultados.{% endif %}
+          </td></tr>
+        {% endfor %}
+      </tbody>
+      {% if total and filas %}
+        <tfoot>
+          <tr>
+            <th colspan="{{ encabezados|length|add:'-1' }}">Total</th>
+            <th class="numero">{{ total }}</th>
+          </tr>
+        </tfoot>
+      {% endif %}
+    </table>
+  </div>
+</div>
+{% endblock %}
