@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Modalidades</h1>
+<a href="{% url 'servicios:modalidad_crear' %}">+ Nueva modalidad</a>
+<table>
+  <thead>
+    <tr><th>Servicio</th><th>Plan</th><th>Duración (meses)</th><th>Precio base</th><th>Acciones</th></tr>
+  </thead>
+  <tbody>
+  {% for o in objetos %}
+    <tr>
+      <td>{{ o.servicio.nombre }}</td>
+      <td>{{ o.nombre_plan }}</td>
+      <td>{{ o.duracion_servicio }}</td>
+      <td>{{ o.precio_base }}</td>
+      <td>
+        <a href="{% url 'servicios:modalidad_editar' o.pk %}">Editar</a>
+        <a href="{% url 'servicios:modalidad_eliminar' o.pk %}">Eliminar</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">No hay modalidades registradas.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p><a href="{% url 'servicios:index' %}">Volver a servicios</a></p>
+{% endblock %}

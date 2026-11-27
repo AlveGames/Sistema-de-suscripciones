@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>{% if object %}Editar{% else %}Nuevo{% endif %} servicio</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {% for campo in form %}
+    <p>
+      {{ campo.label_tag }} {{ campo }}
+      {{ campo.errors }}
+    </p>
+  {% endfor %}
+  <button type="submit">Guardar</button>
+  <a href="{% url 'servicios:index' %}">Cancelar</a>
+</form>
+{% endblock %}
