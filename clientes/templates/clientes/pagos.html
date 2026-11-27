@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+{% block titulo %}Pagos{% endblock %}
+{% block encabezado %}Historial de Pagos{% endblock %}
+{# Nota: Quitamos el botón de "+ Nuevo" porque Eyser dijo que los pagos se crean desde operaciones #}
+
+{% block contenido %}
+<div class="tarjeta">
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Operación</th>
+            <th>Tipo de Pago</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in pagos %}
+          <tr>
+            <td>{{ p.pk }}</td>
+            <td>{{ p.cliente }}</td>
+            <td>{{ p.operacion }}</td>
+            <td>{{ p.tipo_pago }}</td>
+            <td>{{ p.fecha }}</td>
+            <td>${{ p.monto }}</td>
+            <td class="numero">
+              <a class="boton secundario chico" href="{% url 'clientes:pago_editar' p.pk %}">Editar</a>
+              <a class="boton peligro chico" href="{% url 'clientes:pago_eliminar' p.pk %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="vacio">No hay pagos registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "core/paginacion.html" %}
+</div>
+{% endblock %}

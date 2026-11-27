@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+{% block titulo %}Eliminar{% endblock %}
+{% block encabezado %}Eliminar registro{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <p>¿Seguro que quieres eliminar <strong>{{ object }}</strong>? Esta acción no se puede deshacer.</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="botones-form">
+      <button class="boton peligro" type="submit">Sí, eliminar</button>
+      <!-- Usamos request.path para saber si estamos en clientes o en pagos -->
+      {% if 'pago' in request.path %}
+        <a class="boton secundario" href="{% url 'clientes:pagos' %}">Cancelar</a>
+      {% else %}
+        <a class="boton secundario" href="{% url 'clientes:index' %}">Cancelar</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}
