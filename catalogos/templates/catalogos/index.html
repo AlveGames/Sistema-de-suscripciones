@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+{% block titulo %}Catálogos{% endblock %}
+{% block encabezado %}Catálogos{% endblock %}
+
+{% block contenido %}
+<div class="indicadores" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+  {% for c in catalogos %}
+    <div class="tarjeta" style="margin-bottom: 0;">
+      <h2>{{ c.titulo }}</h2>
+      <p class="ayuda">{{ c.descripcion }}</p>
+      <p><span class="etiqueta verde">{{ c.total }} registros</span></p>
+      <a class="boton" href="{% url c.url %}">Abrir</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "core/base.html" %}
+{% block titulo %}Tipos de operación{% endblock %}
+{% block encabezado %}Tipos de operación{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'catalogos:index' %}">← Catálogos</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <p class="ayuda"><span class="etiqueta amarilla">Valores fijos del sistema</span> Las reglas de la base de datos usan estos ids. Solo se puede cambiar el nombre; no se agregan ni se eliminan.</p>
+  <div class="tabla-contenedor">
+    <table>
+      <thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th></th></tr></thead>
+      <tbody>
+        {% for r in registros %}
+          <tr>
+            <td>{{ r.pk }}</td><td>{{ r.nombre_operacion }}</td><td>{{ r.descripcion|default:"—" }}</td>
+            <td class="numero">
+              <a class="boton secundario chico" href="{% url 'catalogos:tipooperacion_editar' r.pk %}">Editar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="9" class="vacio">No hay registros.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
