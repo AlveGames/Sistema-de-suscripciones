@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+{% block titulo %}Clientes{% endblock %}
+{% block encabezado %}Clientes{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'clientes:crear' %}">+ Nuevo Cliente</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <form class="buscador" method="get">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por nombre">
+    <button class="boton secundario" type="submit">Buscar</button>
+  </form>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Tipo</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+          <tr>
+            <td>{{ r.pk }}</td>
+            <td>{{ r.nombre }}</td>
+            <td>{{ r.documento }}</td>
+            <td>{{ r.correo }}</td>
+            <td>{{ r.telefono }}</td>
+            <td>{{ r.tipo_cliente }}</td>
+            <td class="numero">
+              <a class="boton secundario chico" href="{% url 'clientes:editar' r.pk %}">Editar</a>
+              <a class="boton peligro chico" href="{% url 'clientes:eliminar' r.pk %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="vacio">No hay clientes registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "core/paginacion.html" %}
+</div>
+{% endblock %}
