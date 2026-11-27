@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% block titulo %}Tipos de métrica{% endblock %}
+{% block encabezado %}Tipos de métrica{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'catalogos:index' %}">← Catálogos</a> <a class="boton" href="{% url 'catalogos:metrica_crear' %}">+ Nuevo tipo de métrica</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead><tr><th>ID</th><th>Nombre</th><th>Unidad</th><th></th></tr></thead>
+      <tbody>
+        {% for r in registros %}
+          <tr>
+            <td>{{ r.pk }}</td><td>{{ r.nombre }}</td><td>{{ r.unidad }}</td>
+            <td class="numero">
+              <a class="boton secundario chico" href="{% url 'catalogos:metrica_editar' r.pk %}">Editar</a>
+              <a class="boton peligro chico" href="{% url 'catalogos:metrica_eliminar' r.pk %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="9" class="vacio">No hay registros.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
