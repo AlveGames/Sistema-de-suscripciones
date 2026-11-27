@@ -22,10 +22,11 @@
         {% for p in pagos %}
           <tr>
             <td>{{ p.pk }}</td>
-            <td>{{ p.cliente }}</td>
-            <td>{{ p.operacion }}</td>
+            <!-- CAMBIOS DE EYSER AQUÍ -->
+            <td>{{ p.operacion.suscripcion.cliente }}</td>
+            <td>{{ p.operacion.tipo_operacion }}</td>
             <td>{{ p.tipo_pago }}</td>
-            <td>{{ p.fecha }}</td>
+            <td>{{ p.fecha_pago|date:"d/m/Y" }}</td>
             <td>${{ p.monto }}</td>
             <td class="numero">
               <a class="boton secundario chico" href="{% url 'clientes:pago_editar' p.pk %}">Editar</a>

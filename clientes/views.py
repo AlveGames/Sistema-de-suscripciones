@@ -74,6 +74,12 @@ class PagoLista(ListView):
     context_object_name = "pagos"
     paginate_by = 15
 
+    # <--- ESTO ES LO NUEVO QUE PUSO EYSER
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            "operacion__suscripcion__cliente", "operacion__tipo_operacion", "tipo_pago"
+        )
+
 class PagoGuardarMixin:
     def form_valid(self, form):
         try:
