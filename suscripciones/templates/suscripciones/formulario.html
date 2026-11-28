@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block encabezado %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta formulario">
+  {% if s %}
+    <p><strong>Suscripción N.º {{ s.pk }}</strong> · {{ s.cliente.nombre }} · {{ s.modalidad.servicio.nombre }} · {{ s.modalidad.nombre_plan }}
+      · {% include "suscripciones/_estado.html" with estado=s.estado %}</p>
+  {% endif %}
+  {% if ayuda %}<p class="ayuda">{{ ayuda }}</p>{% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="mensaje error">{{ form.non_field_errors|join:" " }}</div>
+    {% endif %}
+    {% for campo in form %}
+      <div class="campo">
+        {{ campo.label_tag }}
+        {{ campo }}
+        {{ campo.errors }}
+      </div>
+    {% endfor %}
+    <div class="botones-form">
+      <button class="boton {% if peligro %}peligro{% endif %}" type="submit">{{ boton }}</button>
+      {% if s %}
+        <a class="boton secundario" href="{% url 'suscripciones:detalle' s.pk %}">Volver</a>
+      {% else %}
+        <a class="boton secundario" href="{% url 'suscripciones:index' %}">Volver</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

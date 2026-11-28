@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+{% block titulo %}Suscripción {{ s.pk }}{% endblock %}
+{% block encabezado %}Suscripción N.º {{ s.pk }}{% endblock %}
+{% block acciones %}<a class="boton secundario" href="{% url 'suscripciones:index' %}">← Suscripciones</a>{% endblock %}
+
+{% block contenido %}
+<div class="indicadores">
+  <div class="indicador"><span>Cliente</span><strong style="font-size: 18px;">{{ s.cliente.nombre }}</strong></div>
+  <div class="indicador"><span>Servicio y plan vigente</span><strong style="font-size: 18px;">{{ s.modalidad.servicio.nombre }} · {{ s.modalidad.nombre_plan }}</strong></div>
+  <div class="indicador"><span>Estado</span><strong style="font-size: 18px;">{% include "suscripciones/_estado.html" with estado=s.estado %}</strong></div>
+  <div class="indicador"><span>Periodo</span><strong style="font-size: 18px;">{{ s.fecha_inicio|date:"d/m/Y" }} → {{ s.fecha_fin|date:"d/m/Y" }}</strong></div>
+  <div class="indicador"><span>Total pagado</span><strong style="font-size: 18px;">$ {{ total_pagado|floatformat:2 }}</strong></div>
+</div>
+
+<div class="tarjeta">
+  <h2>Operaciones disponibles</h2>
+  {% if acciones %}
+    <div class="acciones" style="justify-content: flex-start;">
+      {% for a in acciones %}
+        <a class="boton {% if a == 'cancelar' %}peligro{% elif a != 'renovar' %}secundario{% endif %}" href="{% url 'suscripciones:operar' s.pk a %}">
+          {% if a == 'renovar' %}Renovar{% elif a == 'modificar' %}Cambiar de plan{% elif a == 'suspender' %}Suspender{% elif a == 'reactivar' %}Reactivar{% else %}Cancelar{% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="ayuda">Esta suscripción está cancelada: ya no admite operaciones. Su historial se conserva.</p>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  <h2>Historial de operaciones</h2>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Operación</th><th>Plan anterior</th><th>Plan nuevo</th><th class="numero">Precio aplicado</th><th>Periodo</th><th>Pago</th><th>Observación</th></tr>
+      </thead>
+      <tbody>
+        {% for o in operaciones %}
+          <tr>
+            <td>{{ o.fecha_operacion|date:"d/m/Y" }}</td>
+            <td><span class="etiqueta">{{ o.tipo_operacion }}</span></td>
+            <td>{{ o.modalidad_anterior.nombre_plan|default:"—" }}</td>
+            <td>{{ o.modalidad_nueva.nombre_plan }}</td>
+            <td class="numero">{% if o.precio_aplicado is not None %}$ {{ o.precio_aplicado }}{% else %}—{% endif %}</td>
+            <td>{% if o.fecha_inicio_periodo %}{{ o.fecha_inicio_periodo|date:"d/m/Y" }} → {{ o.fecha_fin_periodo|date:"d/m/Y" }}{% else %}—{% endif %}</td>
+            <td>{% for p in o.pagos.all %}$ {{ p.monto }} ({{ p.tipo_pago }}){% empty %}Sin cobro{% endfor %}</td>
+            <td>{{ o.observacion|default:"—" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="8" class="vacio">Sin operaciones.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
