@@ -1,0 +1,44 @@
+{% extends "core/base.html" %}
+{% block titulo %}Suscripciones{% endblock %}
+{% block encabezado %}Suscripciones{% endblock %}
+{% block acciones %}<a class="boton" href="{% url 'suscripciones:contratar' %}">+ Contratar suscripción</a>{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+  <form class="buscador" method="get">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por cliente o documento">
+    <select name="estado" style="padding: 8px 11px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; background: #fff;">
+      <option value="">Todos los estados</option>
+      {% for e in estados %}
+        <option value="{{ e.pk }}" {% if e.pk|stringformat:"s" == estado_elegido %}selected{% endif %}>{{ e }}</option>
+      {% endfor %}
+    </select>
+    <button class="boton secundario" type="submit">Filtrar</button>
+  </form>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr><th>N.º</th><th>Cliente</th><th>Servicio</th><th>Plan vigente</th><th>Estado</th><th>Inicio</th><th>Fin</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for s in registros %}
+          <tr>
+            <td>{{ s.pk }}</td>
+            <td>{{ s.cliente.nombre }}</td>
+            <td>{{ s.modalidad.servicio.nombre }}</td>
+            <td>{{ s.modalidad.nombre_plan }}</td>
+            <td>{% include "suscripciones/_estado.html" with estado=s.estado %}</td>
+            <td>{{ s.fecha_inicio|date:"d/m/Y" }}</td>
+            <td>{{ s.fecha_fin|date:"d/m/Y" }}</td>
+            <td class="numero"><a class="boton secundario chico" href="{% url 'suscripciones:detalle' s.pk %}">Ver</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="8" class="vacio">No hay suscripciones.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "core/paginacion.html" %}
+</div>
+{% endblock %}
